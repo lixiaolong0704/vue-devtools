@@ -5,6 +5,7 @@
       selected
     }"
     class="instance"
+    :title="selected?`${inspectedInstance.file}[${inspectedInstance.name}]`:''"
   >
     <div
       ref="self"
