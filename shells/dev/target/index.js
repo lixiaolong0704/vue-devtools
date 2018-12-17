@@ -40,7 +40,7 @@ new Vue({
       h(Target, { props: { msg: 'hi', ins: new MyClass() } }),
       h(Other),
       h(Events, { key: 'foo' }),
-      h(NativeTypes, { key: new Date() }),
+      h(NativeTypes, { key: new Date().toString() }),
       h(Router, { key: [] }),
       h(TransitionExample),
       h(VuexObject),

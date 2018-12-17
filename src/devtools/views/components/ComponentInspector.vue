@@ -35,6 +35,7 @@
         <span>Open in editor</span>
       </a>
         <a
+                v-if="inspectedInstance"
                 v-tooltip="'Copy'"
                 class="button"
                 @click="Copy"
