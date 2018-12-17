@@ -34,6 +34,14 @@
         <VueIcon icon="launch" />
         <span>Open in editor</span>
       </a>
+        <a
+                v-tooltip="'Copy'"
+                class="button"
+                @click="Copy"
+        >
+            <span>Copy</span>
+
+        </a>
     </action-header>
     <template slot="scroll">
       <section
@@ -67,7 +75,35 @@ import ActionHeader from 'components/ActionHeader.vue'
 import StateInspector from 'components/StateInspector.vue'
 import { searchDeepInObject, sortByKey, classify, openInEditor } from 'src/util'
 import groupBy from 'lodash.groupby'
+import { mapState } from 'vuex'
+// Copies a string to the clipboard. Must be called from within an
+// event handler such as click. May return false if it failed, but
+// this is not always possible. Browser support for Chrome 43+,
+// Firefox 42+, Safari 10+, Edge and IE 10+.
+// IE: The clipboard feature may be disabled by an administrator. By
+// default a prompt is shown the first time the clipboard is
+// used (per session).
+function copyToClipboard(text) {
+    if (window.clipboardData && window.clipboardData.setData) {
+        // IE specific code path to prevent textarea being shown while dialog is visible.
+        return clipboardData.setData("Text", text);
 
+    } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        } catch (ex) {
+            console.warn("Copy to clipboard failed.", ex);
+            return false;
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
 export default {
   components: {
     ScrollPane,
@@ -89,6 +125,9 @@ export default {
   },
 
   computed: {
+  ...mapState('components', [
+      'inspectedInstance'
+  ]),
     hasTarget () {
       return this.target.id != null
     },
@@ -113,6 +152,19 @@ export default {
   },
 
   methods: {
+    Copy(){
+        console.log(this.target.state);
+        console.dir(this.filteredState);
+        //JSON.stringify(obj, null, 2);
+        /* Get the text field */
+        if(this.inspectedInstance && this.inspectedInstance.infos){
+            copyToClipboard(JSON.stringify(this.inspectedInstance.infos, null, 2))
+        }
+
+
+
+
+    },
     inspectDOM () {
       if (!this.hasTarget) return
       if (this.$isChrome) {

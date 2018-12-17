@@ -492,6 +492,58 @@ function markFunctional (id, vnode) {
   functionalVnodeMap.get(refId)[id] = vnode
 }
 
+function  ComputedObj (instance,wantType) {
+    const computed = {}
+    const defs = instance.$options.computed || {}
+    // use for...in here because if 'computed' is not defined
+    // on component, computed properties will be placed in prototype
+    // and Object.keys does not include
+    // properties from object's prototype
+    for (const key in defs) {
+        const def = defs[key]
+        const type = typeof def === 'function' && def.vuex
+            ? 'vuex bindings'
+            : 'computed'
+        // use try ... catch here because some computed properties may
+        // throw error during its evaluation
+        let computedProp = null
+
+        if(type!==wantType){
+            continue;
+        }
+        try {
+
+
+            computed[key] =instance[key];
+
+            computedProp = {
+                type,
+                key,
+                value: instance[key]
+            }
+        } catch (e) {
+            computed[key] ='(error during evaluation)';
+            computedProp = {
+                type,
+                key,
+                value: '(error during evaluation)'
+            }
+        }
+
+        //computed.push(computedProp)
+    }
+
+    return computed
+}
+
+function getInfos(instance) {
+    return {
+        data:instance._data,
+        props:instance._props,
+        computed:ComputedObj(instance,'computed'),
+        'vuex bindings':ComputedObj(instance,'vuex bindings')
+    }
+}
 /**
  * Get the detailed information of an inspected instance.
  *
@@ -518,7 +570,8 @@ function getInstanceDetails (id) {
     const data = {
       id: id,
       name: getInstanceName(instance),
-      state: getInstanceState(instance)
+      state: getInstanceState(instance),
+        infos: getInfos(instance)
     }
 
     let i

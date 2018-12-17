@@ -19,12 +19,13 @@ export default {
   data(){
     return {
         stu:{
-            speak:()=>{
-                console.log("shit...");
-            },
-            speak1: (()=>{
-                console.log("shit...");
-            }).toString()
+            name:'zhansan'
+//            speak:()=>{
+//                console.log("shit...");
+//            },
+//            speak1: (()=>{
+//                console.log("shit...");
+//            }).toString()
         }
     }
   },
