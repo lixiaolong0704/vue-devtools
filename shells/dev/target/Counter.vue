@@ -16,6 +16,18 @@
 import { mapState } from 'vuex'
 
 export default {
+  data(){
+    return {
+        stu:{
+            speak:()=>{
+                console.log("shit...");
+            },
+            speak1: (()=>{
+                console.log("shit...");
+            }).toString()
+        }
+    }
+  },
   created () {
     // simulate firebase binding
     this.$firebaseRefs = {

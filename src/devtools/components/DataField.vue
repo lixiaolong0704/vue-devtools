@@ -341,14 +341,22 @@ export default {
     },
 
     formattedValue () {
+
+
       const value = this.field.value
+        console.log(`${value}--${typeof value}`)
+
       let result
       if (this.fieldOptions.abstract) {
         return ''
-      } else if ((result = specialTokenToString(value))) {
+      }else if ((result = specialTokenToString(value))) {
         return result
       } else if (this.valueType === 'custom') {
-        return value._custom.display
+          if(value._custom.type === 'function'){
+              return value._custom.display
+          }else{
+              return value._custom.display
+          }
       } else if (this.valueType === 'array') {
         return 'Array[' + value.length + ']'
       } else if (this.valueType === 'plain-object') {

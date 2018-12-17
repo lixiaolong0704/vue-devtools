@@ -264,7 +264,7 @@ export function getCustomFunctionDetails (func) {
   return {
     _custom: {
       type: 'function',
-      display: `<span>ƒ</span> ${escape(name)}${args}`
+      display: `<span>ƒ</span> ${escape(name)}${args} <span>${func.toString()}</span>`
     }
   }
 }
